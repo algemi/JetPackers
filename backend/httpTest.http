@@ -1,0 +1,113 @@
+### First register a user then login with user to obtain a token
+@loginToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJzbWl0aC5qb2huQGV4YW1wbGUuY29tIiwiaWF0IjoxNzA5OTIwMzcwLCJleHAiOjE3NDE0NTYzNzB9.OIzsauNaeyjWEKP5hBB2AI9SSvBH6JdMlMPBz9SxavI
+
+### GET /admin/createDb - initial DB Tabellen erstellen
+GET http://localhost:8080/admin/createDb
+Authorization: {{loginToken}}
+
+### GET /admin/createDummyData - Test Daten erstellen
+GET http://localhost:8080/admin/createDummyData
+Authorization: {{loginToken}}
+
+
+### POST /user/register - User registrieren
+POST http://localhost:8080/user/register
+Content-Type: application/json
+
+{
+  "surname": "John",
+  "lastname": "Doe",
+  "phone_number": "123456789",
+  "email": "john.doe@example.com",
+  "password": "password123"
+}
+
+### POST /user/login - User Login
+POST http://localhost:8080/user/login
+Content-Type: application/json
+
+{
+  "email": "smith.john@example.com",
+  "password": "password123"
+}
+
+### POST /user/payment - Als User, eine Zahlungsart hinzufügen
+POST http://localhost:8080/user/payment
+Authorization: {{loginToken}}
+Content-Type: application/json
+
+{
+  "payment_method": "VISA",
+  "credit_card_number": 1234567890
+}
+
+### GET /user - Als User, Userdaten abfragen
+GET http://localhost:8080/user
+Authorization: {{loginToken}}
+
+
+### POST /trips - Als Trip Provider, einen Trip anbieten
+POST http://localhost:8080/trips
+Authorization: {{loginToken}}
+Content-Type: application/json
+
+{
+  "start_location": 1,
+  "end_location": 2,
+  "date": "2024-03-10T16:30",
+  "price": "15.90"
+}
+
+### GET /trips - Als User, suche nach verfügbaren Trips
+GET http://localhost:8080/trips?from=2&to=3&date=2024-03-10
+
+### DELETE /trips - Als Trip Provider, einen angebotenen Trip deaktivieren
+DELETE http://localhost:8080/trips?tripId=7
+Authorization: {{loginToken}}
+
+### GET /trips/provided - Als Trip Provider, alle selbst angebotenen Trips abrufen
+GET http://localhost:8080/trips/provided
+Authorization: {{loginToken}}
+
+### GET /trips/locations - Als User, alle verfügbaren Locations abrufen
+GET http://localhost:8080/trips/locations
+
+
+### POST /bookings/items - Als User, 1x Item für ein Booking erstellen
+POST http://localhost:8080/bookings/items
+Authorization: {{loginToken}}
+Content-Type: application/json
+
+{
+  "description": "test description",
+  "size": "Medium",
+  "weight": "5kg"
+}
+
+### POST /bookings - Als User, ein Booking vornehmen
+POST http://localhost:8080/bookings
+Authorization: {{loginToken}}
+Content-Type: application/json
+
+{
+  "trip_id": 1,
+  "item_id": 7
+}
+
+### GET /bookings - Als User, alle eigenen Bookings abrufen
+GET http://localhost:8080/bookings
+Authorization: {{loginToken}}
+
+### GET /bookings/requests - Als Trip Provider, alle User Bookings abrufen
+GET http://localhost:8080/bookings/requests?trip=1
+Authorization: {{loginToken}}
+
+### POST /bookings/requests - Als Trip Provider, User Booking State setzen
+POST http://localhost:8080/bookings/requests
+Authorization: {{loginToken}}
+Content-Type: application/json
+
+{
+  "booking_id": 1,
+  "state": 1
+}
